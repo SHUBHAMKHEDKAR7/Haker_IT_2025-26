@@ -70,25 +70,45 @@
                 <h5>Progress Summary</h5>
             </div>
             <div class="card-body">
-                {% set weight_progress = ((progress.current_weight|default(0) / goal.target_weight|default(1)) * 100)|round|int %}
+                {% set current_weight = progress.current_weight|default(0) %}
+                {% set target_weight = goal.target_weight|default(0) %}
+                {% set start_weight = progress.current_weight|default(0) %}
+                
+                {% if target_weight and current_weight %}
+                    {% if target_weight < start_weight %}
+                        {# Weight Loss Scenario #}
+                        {% set total_loss_needed = start_weight - target_weight %}
+                        {% set weight_lost = start_weight - current_weight %}
+                        {% set weight_progress = (weight_lost / total_loss_needed * 100)|round|int if total_loss_needed > 0 else 0 %}
+                    {% else %}
+                        {# Weight Gain Scenario #}
+                        {% set total_gain_needed = target_weight - start_weight %}
+                        {% set weight_gained = current_weight - start_weight %}
+                        {% set weight_progress = (weight_gained / total_gain_needed * 100)|round|int if total_gain_needed > 0 else 0 %}
+                    {% endif %}
+                {% else %}
+                    {% set weight_progress = 0 %}
+                {% endif %}
+                
                 {% if weight_progress > 100 %}{% set weight_progress = 100 %}{% endif %}
-                
-                {% set steps_progress = ((progress.steps_today|default(0) / goal.daily_steps|default(1)) * 100)|round|int %}
-                {% if steps_progress > 100 %}{% set steps_progress = 100 %}{% endif %}
-                
-                {% set workout_progress = ((progress.workout_minutes|default(0) / goal.workout_minutes|default(1)) * 100)|round|int %}
-                {% if workout_progress > 100 %}{% set workout_progress = 100 %}{% endif %}
-                
-                {% set calories_progress = ((progress.calories_burned|default(0) / goal.calories_burn|default(1)) * 100)|round|int %}
-                {% if calories_progress > 100 %}{% set calories_progress = 100 %}{% endif %}
-                
+                {% if weight_progress < 0 %}{% set weight_progress = 0 %}{% endif %}
+                 
+                 {% set steps_progress = ((progress.steps_today|default(0) / goal.daily_steps|default(1)) * 100)|round|int %}
+                 {% if steps_progress > 100 %}{% set steps_progress = 100 %}{% endif %}
+                 
+                 {% set workout_progress = ((progress.workout_minutes|default(0) / goal.workout_minutes|default(1)) * 100)|round|int %}
+                 {% if workout_progress > 100 %}{% set workout_progress = 100 %}{% endif %}
+                 
+                 {% set calories_progress = ((progress.calories_burned|default(0) / goal.calories_burn|default(1)) * 100)|round|int %}
+                 {% if calories_progress > 100 %}{% set calories_progress = 100 %}{% endif %}
+                 
                 <div class="progress mb-3">
-                    <div class="progress-bar" role="progressbar" 
+                    <div class="progress-bar {% if target_weight < start_weight %}bg-danger{% endif %}" role="progressbar" 
                          style="width: {{ weight_progress }}%" 
                          aria-valuenow="{{ weight_progress }}" 
                          aria-valuemin="0" 
                          aria-valuemax="100">
-                        Weight Progress ({{ weight_progress }}%)
+                        Weight Progress: {{ current_weight|default(0) }}kg / {{ target_weight|default(0) }}kg ({{ weight_progress }}%)
                     </div>
                 </div>
                 <div class="progress mb-3">
@@ -97,7 +117,7 @@
                          aria-valuenow="{{ steps_progress }}" 
                          aria-valuemin="0" 
                          aria-valuemax="100">
-                        Steps Progress ({{ steps_progress }}%)
+                        Steps: {{ progress.steps_today|default(0) }} / {{ goal.daily_steps|default(0) }} ({{ steps_progress }}%)
                     </div>
                 </div>
                 <div class="progress mb-3">
@@ -106,7 +126,7 @@
                          aria-valuenow="{{ workout_progress }}" 
                          aria-valuemin="0" 
                          aria-valuemax="100">
-                        Workout Progress ({{ workout_progress }}%)
+                        Workout: {{ progress.workout_minutes|default(0) }} / {{ goal.workout_minutes|default(0) }} min ({{ workout_progress }}%)
                     </div>
                 </div>
                 <div class="progress">
@@ -115,7 +135,7 @@
                          aria-valuenow="{{ calories_progress }}" 
                          aria-valuemin="0" 
                          aria-valuemax="100">
-                        Calories Progress ({{ calories_progress }}%)
+                        Calories: {{ progress.calories_burned|default(0) }} / {{ goal.calories_burn|default(0) }} cal ({{ calories_progress }}%)
                     </div>
                 </div>
             </div>
