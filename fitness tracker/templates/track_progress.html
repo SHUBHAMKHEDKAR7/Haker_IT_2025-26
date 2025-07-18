@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Track Progress{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="text-center">Track Your Progress</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="current_weight" class="form-label">Current Weight (kg)</label>
+                        <input type="number" step="0.1" class="form-control" id="current_weight" name="current_weight" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="steps_today" class="form-label">Steps Today</label>
+                        <input type="number" class="form-control" id="steps_today" name="steps_today" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="workout_minutes" class="form-label">Workout Minutes Today</label>
+                        <input type="number" class="form-control" id="workout_minutes" name="workout_minutes" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="calories_burned" class="form-label">Calories Burned Today</label>
+                        <input type="number" class="form-control" id="calories_burned" name="calories_burned" required>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Save Progress</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

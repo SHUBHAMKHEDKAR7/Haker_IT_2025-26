@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Exercise Recommendations{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Exercise Recommendations</h2>
+        <p class="lead">Based on your age, we recommend {{ level }} level exercises</p>
+    </div>
+</div>
+
+<div class="row mt-4">
+    {% for exercise in exercises %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="card-title">{{ exercise.name }}</h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    <strong>Duration:</strong> {{ exercise.duration }}<br>
+                    <strong>Calories Burned:</strong> {{ exercise.calories }} calories
+                </p>
+            </div>
+            <div class="card-footer">
+                <small class="text-muted">Recommended for {{ level }} level</small>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Exercise Tips</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Start with a 5-10 minute warm-up before each exercise session</li>
+                    <li class="list-group-item">Stay hydrated throughout your workout</li>
+                    <li class="list-group-item">Listen to your body and don't push beyond your limits</li>
+                    <li class="list-group-item">Maintain proper form to prevent injuries</li>
+                    <li class="list-group-item">Gradually increase intensity as you get stronger</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

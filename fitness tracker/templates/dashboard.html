@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Welcome, {{ user.name }}!</h2>
+        <p class="lead">Track your fitness journey and achieve your goals</p>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-header">Weight Goal</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ goal.target_weight|default(0) }} kg</h5>
+                <p class="card-text">Current: {{ progress.current_weight|default(0) }} kg</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-header">Daily Steps</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ goal.daily_steps|default(0) }} steps</h5>
+                <p class="card-text">Today: {{ progress.steps_today|default(0) }} steps</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-header">Workout Minutes</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ goal.workout_minutes|default(0) }} minutes</h5>
+                <p class="card-text">Today: {{ progress.workout_minutes|default(0) }} minutes</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning mb-3">
+            <div class="card-header">Calories Burn</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ goal.calories_burn|default(0) }} calories</h5>
+                <p class="card-text">Today: {{ progress.calories_burned|default(0) }} calories</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('track_progress') }}" class="btn btn-primary">Track Today's Progress</a>
+                    <a href="{{ url_for('set_goals') }}" class="btn btn-secondary">Update Goals</a>
+                    <a href="{{ url_for('recommendations') }}" class="btn btn-success">View Exercise Recommendations</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Progress Summary</h5>
+            </div>
+            <div class="card-body">
+                {% set weight_progress = ((progress.current_weight|default(0) / goal.target_weight|default(1)) * 100)|round|int %}
+                {% if weight_progress > 100 %}{% set weight_progress = 100 %}{% endif %}
+                
+                {% set steps_progress = ((progress.steps_today|default(0) / goal.daily_steps|default(1)) * 100)|round|int %}
+                {% if steps_progress > 100 %}{% set steps_progress = 100 %}{% endif %}
+                
+                {% set workout_progress = ((progress.workout_minutes|default(0) / goal.workout_minutes|default(1)) * 100)|round|int %}
+                {% if workout_progress > 100 %}{% set workout_progress = 100 %}{% endif %}
+                
+                {% set calories_progress = ((progress.calories_burned|default(0) / goal.calories_burn|default(1)) * 100)|round|int %}
+                {% if calories_progress > 100 %}{% set calories_progress = 100 %}{% endif %}
+                
+                <div class="progress mb-3">
+                    <div class="progress-bar" role="progressbar" 
+                         style="width: {{ weight_progress }}%" 
+                         aria-valuenow="{{ weight_progress }}" 
+                         aria-valuemin="0" 
+                         aria-valuemax="100">
+                        Weight Progress ({{ weight_progress }}%)
+                    </div>
+                </div>
+                <div class="progress mb-3">
+                    <div class="progress-bar bg-success" role="progressbar" 
+                         style="width: {{ steps_progress }}%" 
+                         aria-valuenow="{{ steps_progress }}" 
+                         aria-valuemin="0" 
+                         aria-valuemax="100">
+                        Steps Progress ({{ steps_progress }}%)
+                    </div>
+                </div>
+                <div class="progress mb-3">
+                    <div class="progress-bar bg-info" role="progressbar" 
+                         style="width: {{ workout_progress }}%" 
+                         aria-valuenow="{{ workout_progress }}" 
+                         aria-valuemin="0" 
+                         aria-valuemax="100">
+                        Workout Progress ({{ workout_progress }}%)
+                    </div>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar bg-warning" role="progressbar" 
+                         style="width: {{ calories_progress }}%" 
+                         aria-valuenow="{{ calories_progress }}" 
+                         aria-valuemin="0" 
+                         aria-valuemax="100">
+                        Calories Progress ({{ calories_progress }}%)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
