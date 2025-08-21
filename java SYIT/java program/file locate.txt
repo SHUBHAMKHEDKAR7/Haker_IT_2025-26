@@ -1,0 +1,4 @@
+file locate 
+git add .
+git commit -m "description of file"
+git push

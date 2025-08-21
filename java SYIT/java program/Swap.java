@@ -3,7 +3,7 @@ public class Swap{
 public static void main(String[] args){
 int a, b;
 int swap;
-Scanner sc = new Scanner("System.in");
+Scanner sc = new Scanner(System.in);
 System.out.println("Enter the NO A:");
 System.out.println("Enter the NO B:");
 a = sc.nextInt();
