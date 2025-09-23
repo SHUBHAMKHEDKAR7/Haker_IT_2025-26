@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>prapose to girl</title>
+  <style>
+    :root {
+      --bg1: #ffdee9;
+      --bg2: #b5fffc;
+      --primary: #ff4d6d;
+      --primary-dark: #d63357;
+      --text: #2a2a2a;
+      --muted: #6b7280;
+      --card: #ffffffcc;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+      color: var(--text);
+    }
+    body {
+      background: linear-gradient(135deg, var(--bg1), var(--bg2));
+      display: grid;
+      place-items: center;
+      overflow-x: hidden;
+    }
+
+    /* Floating hearts in the background */
+    .hearts-bg {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .heart {
+      position: absolute;
+      width: 18px; height: 18px;
+      background: var(--primary);
+      transform: rotate(45deg);
+      opacity: 0.2;
+      animation: floatUp linear infinite;
+      border-radius: 3px;
+    }
+    .heart::before, .heart::after {
+      content: "";
+      position: absolute;
+      width: 18px; height: 18px;
+      background: var(--primary);
+      border-radius: 50%;
+    }
+    .heart::before { left: -9px; top: 0; }
+    .heart::after  { left: 0; top: -9px; }
+    @keyframes floatUp {
+      0%   { transform: translateY(0) rotate(45deg); }
+      100% { transform: translateY(-120vh) rotate(45deg); }
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      width: min(720px, 92vw);
+      background: var(--card);
+      backdrop-filter: blur(6px);
+      border-radius: 24px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+      padding: clamp(20px, 4vw, 36px);
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 4px auto 14px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: #fff;
+      box-shadow: 0 6px 12px rgba(255,77,109,0.25);
+      font-weight: 600;
+      color: var(--primary-dark);
+      letter-spacing: 0.3px;
+      width: max-content;
+    }
+    .badge .dot {
+      width: 8px; height: 8px; border-radius: 50%; background: var(--primary);
+      box-shadow: 0 0 0 6px rgba(255,77,109,0.15);
+    }
+
+    h1 {
+      margin: 8px 0 10px;
+      font-size: clamp(28px, 4.2vw, 46px);
+      line-height: 1.15;
+    }
+    .lead {
+      margin: 8px auto 22px;
+      font-size: clamp(16px, 2.1vw, 19px);
+      color: var(--muted);
+      max-width: 52ch;
+    }
+
+    .names {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      background: #fff;
+      padding: 8px 16px;
+      border-radius: 999px;
+      box-shadow: inset 0 0 0 2px rgba(255,77,109,0.15);
+      margin-bottom: 14px;
+    }
+
+    .actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
+    button {
+      padding: 12px 22px;
+      border: none; border-radius: 999px; cursor: pointer; font-weight: 700;
+      transition: transform .15s ease, box-shadow .2s ease, background .2s ease;
+    }
+    .btn-yes {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 10px 18px rgba(255,77,109,0.35);
+    }
+    .btn-yes:hover { transform: translateY(-1px); }
+
+    .btn-no {
+      background: #fff;
+      color: var(--primary-dark);
+      border: 2px solid rgba(255,77,109,0.25);
+    }
+
+    .note {
+      margin-top: 18px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    /* Result modal */
+    .modal {
+      position: fixed; inset: 0; display: grid; place-items: center;
+      background: rgba(0,0,0,0.35);
+      visibility: hidden; opacity: 0; transition: opacity .25s ease, visibility .25s linear;
+      z-index: 10;
+    }
+    .modal.open { visibility: visible; opacity: 1; }
+    .modal-card {
+      width: min(560px, 90vw);
+      background: #fff;
+      border-radius: 22px;
+      padding: 28px;
+      text-align: center;
+      box-shadow: 0 18px 36px rgba(0,0,0,0.25);
+    }
+    .modal-card h2 { margin: 6px 0 8px; font-size: clamp(24px, 3.6vw, 34px); }
+    .modal-card p { color: var(--muted); margin: 0 0 14px; }
+
+    /* Canvas fireworks */
+    #fx {
+      position: fixed; inset: 0; pointer-events: none; z-index: 9;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 22px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* Mobile friendly playful no-button */
+    @media (hover: hover) {
+      .btn-no:hover { transform: translate(calc(10px - 20px * var(--rand-x)), calc(-6px + 12px * var(--rand-y))); }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="fx"></canvas>
+  <div class="hearts-bg" aria-hidden="true" id="bg"></div>
+
+  <main class="card" role="dialog" aria-label="Proposal Card">
+    <div class="badge"><span class="dot"></span> Special Message</div>
+
+    <div class="names" id="names"><span contenteditable="true" spellcheck="false">Your Name</span> ❤ <span contenteditable="true" spellcheck="false">Her Name</span></div>
+
+    <h1>Will you be my forever?</h1>
+    <p class="lead">From the moment I met you, everything felt brighter. I promise to stand by you, make you laugh, and love you a little more every single day. 💖</p>
+
+    <div class="actions">
+      <button class="btn-yes" id="yesBtn" aria-label="Yes">Yes! 💍</button>
+      <button class="btn-no" id="noBtn" aria-label="Maybe later">Hmm… maybe later</button>
+    </div>
+
+    <p class="note">Tip: Tap the names to edit them. You can also change the message above to make it yours. Share this page to make the moment magical!</p>
+
+    <div class="footer">Made with ♥ for someone special</div>
+  </main>
+
+  <section class="modal" id="modal" aria-hidden="true">
+    <div class="modal-card" role="alertdialog" aria-live="polite">
+      <div style="font-size:42px">🎉💖</div>
+      <h2>She said YES!</h2>
+      <p>Here’s to a lifetime of love, laughter, and endless adventures together.</p>
+      <button class="btn-yes" id="closeModal">Aww, thank you!</button>
+    </div>
+  </section>
+
+  <script>
+    // Floating hearts background generator
+    const bg = document.getElementById('bg');
+    const makeHearts = () => {
+      const w = window.innerWidth;
+      const count = Math.min(40, Math.max(18, Math.floor(w / 40)));
+      bg.innerHTML = '';
+      for (let i = 0; i < count; i++) {
+        const h = document.createElement('span');
+        h.className = 'heart';
+        const size = 10 + Math.random() * 16;
+        h.style.width = size + 'px';
+        h.style.height = size + 'px';
+        h.style.left = Math.random() * 100 + 'vw';
+        h.style.bottom = (-10 - Math.random() * 30) + 'vh';
+        h.style.animationDuration = (8 + Math.random() * 10) + 's';
+        h.style.animationDelay = (Math.random() * 6) + 's';
+        h.style.opacity = (0.12 + Math.random() * 0.25).toFixed(2);
+        bg.appendChild(h);
+      }
+    };
+    makeHearts();
+    addEventListener('resize', () => requestAnimationFrame(makeHearts));
+
+    // Playful "No" button that dodges the pointer
+    const noBtn = document.getElementById('noBtn');
+    const jitter = () => {
+      noBtn.style.setProperty('--rand-x', Math.random().toString());
+      noBtn.style.setProperty('--rand-y', Math.random().toString());
+    };
+    setInterval(jitter, 500);
+    noBtn.addEventListener('mouseenter', () => {
+      const dx = (Math.random() * 160 - 80);
+      const dy = (Math.random() * 70 - 35);
+      noBtn.style.transform = `translate(${dx}px, ${dy}px)`;
+      setTimeout(() => noBtn.style.transform = '', 800);
+    });
+
+    // Modal + fireworks when "Yes" is clicked
+    const canvas = document.getElementById('fx');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    function resize() { canvas.width = innerWidth; canvas.height = innerHeight; }
+    addEventListener('resize', resize); resize();
+
+    function burst(x, y) {
+      const colors = ['#ff4d6d', '#ff8fa3', '#ffd1dc', '#ffc078', '#b2f2bb'];
+      for (let i = 0; i < 120; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 2 + Math.random() * 5;
+        particles.push({
+          x, y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          life: 60 + Math.random() * 40,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          size: 2 + Math.random() * 3
+        });
+      }
+    }
+
+    function drawHeart(x, y, s, color) {
+      ctx.save();
+      ctx.translate(x, y); ctx.rotate(Math.PI / 4);
+      ctx.fillStyle = color; ctx.globalAlpha = 0.9;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      const r = s;
+      ctx.arc(-r, 0, r, 0, Math.PI, false);
+      ctx.arc(0, -r, r, Math.PI/2, Math.PI*1.5, false);
+      ctx.lineTo(0, 0);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function loop() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles = particles.filter(p => p.life > 0);
+      for (const p of particles) {
+        p.x += p.vx; p.y += p.vy;
+        p.vy += 0.03; // gravity
+        p.vx *= 0.99; p.vy *= 0.99;
+        p.life -= 1;
+        drawHeart(p.x, p.y, p.size, p.color);
+      }
+      requestAnimationFrame(loop);
+    }
+    loop();
+
+    const modal = document.getElementById('modal');
+    const yesBtn = document.getElementById('yesBtn');
+    const closeModal = document.getElementById('closeModal');
+
+    function openModal() {
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+    }
+    function hideModal() {
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+    }
+
+    yesBtn.addEventListener('click', (e) => {
+      const rect = e.target.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
+      burst(x, y);
+      openModal();
+    });
+    closeModal.addEventListener('click', hideModal);
+
+    // Save edited names to URL (so you can share personalized link)
+    function encodeParams() {
+      const spans = document.querySelectorAll('#names span');
+      const a = encodeURIComponent(spans[0].innerText.trim());
+      const b = encodeURIComponent(spans[1].innerText.trim());
+      const msg = encodeURIComponent(document.querySelector('.lead').innerText.trim());
+      history.replaceState({}, '', `?a=${a}&b=${b}&m=${msg}`);
+    }
+    document.querySelectorAll('#names span, .lead').forEach(el => {
+      el.addEventListener('input', () => {
+        // throttle a little
+        clearTimeout(el._t);
+        el._t = setTimeout(encodeParams, 300);
+      });
+    });
+
+    // Load from URL if present
+    const params = new URLSearchParams(location.search);
+    if (params.has('a') || params.has('b')) {
+      const spans = document.querySelectorAll('#names span');
+      spans[0].innerText = decodeURIComponent(params.get('a') || 'Your Name');
+      spans[1].innerText = decodeURIComponent(params.get('b') || 'Her Name');
+    }
+    if (params.has('m')) {
+      document.querySelector('.lead').innerText = decodeURIComponent(params.get('m'));
+    }
+  </script>
+</body>
+</html>
